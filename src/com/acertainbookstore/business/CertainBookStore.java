@@ -296,7 +296,36 @@ public class CertainBookStore implements BookStore, StockManager {
 
     @Override
     public void rateBooks(Set<BookRating> bookRating) throws BookStoreException {
-        // TODO Auto-generated method stub
+        if (bookRating == null) {
+            throw new BookStoreException(BookStoreConstants.NULL_INPUT);
+        }
+
+        int ISBN;
+        int rating;
+        BookStoreBook book;
+
+        // Validation run-through
+        for (BookRating bookToRate : bookRating) {
+            ISBN = bookToRate.getISBN();
+            rating = bookToRate.getRating();
+            if (BookStoreUtility.isInvalidISBN(ISBN))
+                throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                        + BookStoreConstants.INVALID);
+            if (BookStoreUtility.isInvalidRating(rating))
+                throw new BookStoreException(BookStoreConstants.RATING + rating
+                        + BookStoreConstants.INVALID);
+            if (!bookMap.containsKey(ISBN))
+                throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                        + BookStoreConstants.NOT_AVAILABLE);
+        }
+
+        // Add the ratings
+        for (BookRating bookToRate : bookRating) {
+            ISBN = bookToRate.getISBN();
+            rating = bookToRate.getRating();
+            book = bookMap.get(ISBN);
+            book.addRating(rating);
+        }
     }
 
 }
