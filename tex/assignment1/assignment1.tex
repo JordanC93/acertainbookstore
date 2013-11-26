@@ -80,6 +80,31 @@ shared/exclusive locks and so on.
 \subsubsection{}
 % XXX: TODO
 
+\subsection{Question 2, Performance}
+\subsubsection{How does concurrency influence latency?}
+
+The latency will be lower, if the overhead of scheduling, work partitioning and
+other concurrency related overhead is less than the gain from parallelizing the
+computation and vice versa. This will in practice favor larger computations and
+datasets, while influencing smaller jobs negatively.
+
+\subsubsection{What is the difference between dallying and batching?}
+
+Batching is the act of performing several related actions simultaneously.
+Dallying is the act of postponing an action, in order to later potentially batch
+the action together with another related action, or maybe avoid doing it at all.
+
+As an example, we can look at memory mapped files, where data is read from the
+disk in batches (pages).
+Write requests are dallied by only writing changes to ram, postponing disk
+writes until strictly necessary, potentially batching several changes to a page
+into one disk write.
+
+\subsubsection{Is caching an example of fast path optimization?}
+
+Caching exploits the fact that more frequently accessed items are more likely
+to be in the cache. By this virtue, caching will often improve the common case
+and is therefore an example of fast path optimization.
 
 \end{document}
 
