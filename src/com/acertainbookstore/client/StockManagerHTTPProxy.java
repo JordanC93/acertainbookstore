@@ -141,8 +141,12 @@ public class StockManagerHTTPProxy implements StockManager {
 
 	@Override
 	public List<StockBook> getBooksInDemand() throws BookStoreException {
-		// TODO Auto-generated method stub
-		return null;
+        ContentExchange exchange = new ContentExchange();
+        String urlString = serverAddress + "/" + BookStoreMessageTag.BOOKSINDEMAND;
+
+        exchange.setURL(urlString);
+
+        return (List<StockBook>) BookStoreUtility.SendAndRecv(this.client, exchange);
 	}
 
 }

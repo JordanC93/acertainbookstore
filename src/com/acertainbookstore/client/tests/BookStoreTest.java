@@ -28,7 +28,7 @@ import com.acertainbookstore.utils.BookStoreException;
  */
 public class BookStoreTest {
 
-	private static boolean localTest = true; 
+	private static boolean localTest = false;
 	private static StockManager storeManager;
 	private static BookStore client;
 
