@@ -1,0 +1,85 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{amsmath,amssymb,amsfonts}
+
+\title{Principles of Computer System Design\\Assignment 1}
+\author{Kristoffer Søholm\\Sebastian Paaske Tørholm}
+
+\begin{document}
+\maketitle
+
+\section{Exercises}
+\subsection{Question 1, Fundamental abstractions}
+\subsubsection{Model for implementing shared address space}
+One could model an address in the shared address space as a 2-tuple of two
+elements; the address or identifier of a machine, and the address on the given
+machine. This is highly scalable, as each component is separated and each of
+the two addresses can be interpreted independently. With suitable encoding,
+no limitation is needed on the size of either the machine address or memory
+address.
+
+This model requires a naming service to determine what address each machine
+has. This address could, for instance, be an IP address.
+In its simplest form, the tuple is simply \texttt{(ip-address, memory-address)}.
+
+\subsubsection{Pseudocode for implementation of READ/WRITE}
+
+\begin{verbatim}
+def READ((machineaddr, dataaddr)):
+    try {
+        machine = connect(machineaddr, timeout)
+        data = machine.read(dataaddr)
+        machine.disconnect()
+    } catch(TimeoutException) {
+        data = null
+    }
+
+    return data
+\end{verbatim}
+
+\begin{verbatim}
+def WRITE((machineaddr, dataaddr), data):
+    try {
+        machine = connect(machineaddr, timeout)
+        data = machine.write(dataaddr, data)
+        machine.disconnect()
+        return true
+    } catch(TimeoutException) {
+        return false
+    }
+\end{verbatim}
+
+Here, \texttt{connect} is a function that produces a connection object to
+communicate with the given machine, and said object has a \texttt{read} and
+\texttt{write} method that works locally on that machine. In case of a non-responsive
+machine, the connect function times out and recovers by responding with null and false,
+for reads, resp. writes.
+
+Pattern matching is used to extract the parts of the address from the full
+address (tuple).
+
+\subsubsection{Are READ/WRITE against memory atomic?}
+On most architectures, reads and writes of a word size is atomic. Larger 
+reads/writes tends to be conducted in software through smaller writes,
+without explicit hardware support for atomic large transfer of data.
+
+Most commonly, a write would be expected to be atomic by the programmer using
+the service. As such, implementing atomicity would most likely be desired, since
+partially written data in many contexts would be considered corrupt.
+
+Atomicity could be achieved using one of the locking mechanisms mentioned
+in the lectures. Locking could be done on a per-machine basis, or the
+memory space of each machine could be split into regions, for which locks
+must be held to perform operations. This could be further expanded to use
+shared/exclusive locks and so on.
+
+\subsubsection{}
+% XXX: TODO
+
+
+\end{document}
+
