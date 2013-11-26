@@ -283,8 +283,15 @@ public class CertainBookStore implements BookStore, StockManager {
 
     @Override
     public synchronized List<StockBook> getBooksInDemand() throws BookStoreException {
-        // TODO Auto-generated method stub
-        return null;
+        List<StockBook> booksInDemand = new ArrayList<StockBook>();
+
+        for (BookStoreBook book : bookMap.values()) {
+            if (book.hadSaleMiss()) {
+                booksInDemand.add(book.immutableStockBook());
+            }
+        }
+
+        return booksInDemand;
     }
 
     @Override
