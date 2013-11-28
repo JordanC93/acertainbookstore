@@ -28,7 +28,7 @@ import com.acertainbookstore.utils.BookStoreException;
  */
 public class BookStoreTest {
 
-	private static boolean localTest = false;
+	private static boolean localTest = true;
 	private static StockManager storeManager;
 	private static BookStore client;
 
@@ -246,6 +246,8 @@ public class BookStoreTest {
 	 * 
 	 * 4. We also check that the appropriate exception is thrown when rateBook
 	 * is executed with wrong arguments
+     *
+     * 5. We check that all-or-nothing semantics are upheld.
 	 */
 	@Test
 	public void testRateBook() {
@@ -311,6 +313,34 @@ public class BookStoreTest {
 			e.printStackTrace();
 			fail();
 		}
+
+        // test all-or-nothing semantics
+        bookRatingList.clear();
+        bookRatingList.add(new BookRating(testISBN, 4));  // valid
+        bookRatingList.add(new BookRating(testISBN, 6));  // invalid
+        bookRatingList.add(new BookRating(testISBN, 3));  // valid
+
+        try {
+            client.rateBooks(bookRatingList);
+        } catch (BookStoreException e) {
+            exceptionThrown = true;
+        }
+        assertTrue("all-or-nothing - rating threw exception", exceptionThrown);
+
+        try {
+            client.rateBooks(bookRatingList);
+            listBooks = storeManager.getBooks();
+        } catch (BookStoreException e1) {
+            e1.printStackTrace();
+            fail();
+        }
+        for (StockBook book : listBooks) {
+            if (book.getISBN() == testISBN) {
+                // neither the 4 or 3 rating have gone through
+                assertTrue("all-or-nothing - rating unchanged", book.getTotalRating() == rating);
+                break;
+            }
+        }
 	}
 
 	/**
