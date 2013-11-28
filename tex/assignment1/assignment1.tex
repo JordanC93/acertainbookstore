@@ -77,8 +77,12 @@ memory space of each machine could be split into regions, for which locks
 must be held to perform operations. This could be further expanded to use
 shared/exclusive locks and so on.
 
-\subsubsection{}
-% XXX: TODO
+\subsubsection{Dynamic joins}
+Our choice of naming scheme allows new machines to be added simply by giving
+them an address in the naming service. Dynamic leaving requires redundancy to
+prevent memory locations from becoming unavailable. Replacement of a server
+could occur by taking down the old server and assigning the new server with the
+old address in the naming service.
 
 \subsection{Question 2, Performance}
 \subsubsection{How does concurrency influence latency?}
@@ -105,6 +109,9 @@ into one disk write.
 Caching exploits the fact that more frequently accessed items are more likely
 to be in the cache. By this virtue, caching will often improve the common case
 and is therefore an example of fast path optimization.
+
+\section{Programming Task}
+
 
 \end{document}
 

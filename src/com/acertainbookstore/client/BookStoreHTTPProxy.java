@@ -132,7 +132,7 @@ public class BookStoreHTTPProxy implements BookStore {
     public void rateBooks(Set<BookRating> bookRating) throws BookStoreException {
         ContentExchange exchange = new ContentExchange();
         String urlString = serverAddress + "/" + BookStoreMessageTag.RATEBOOKS;
-
+        
         String listISBNsxmlString = BookStoreUtility
                 .serializeObjectToXMLString(bookRating);
         exchange.setMethod("POST");
@@ -144,7 +144,6 @@ public class BookStoreHTTPProxy implements BookStore {
 
 
     }
-
 
 	@Override
 	public List<Book> getTopRatedBooks(int numBooks) throws BookStoreException {
