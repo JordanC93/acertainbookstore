@@ -122,7 +122,15 @@ and is therefore an example of fast path optimization.
 % XXX: TODO
 
 \subsection{Is usage of proxy servers safe?}
-% XXX: TODO
+You could safely add proxying between the client proxies and the HTTP server
+itself. In the current state it's doubtful that this would add better
+scalability, however, since all requests still need to go through the HTTP
+server one at a time anyway.
+
+Caching could be added to help alleviate this, with appropriate measures taken
+to handle invalidation of modified data. Furthermore, if the HTTP server was
+rewritten to support batched requests, dallying could be employed by the proxy
+servers, allowing them to send larger number of requests with fewer connections.
 
 \subsection{Are there scalability bottlenecks wrt. the number of clients?}
 % XXX: TODO
