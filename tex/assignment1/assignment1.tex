@@ -113,13 +113,28 @@ and is therefore an example of fast path optimization.
 \section{Architecture}
 
 \subsection{How does it achieve strong modularity?}
-% XXX: TODO
+The architecture is strongly modular in the sense that almost all parts can be
+replaced or modified without affecting the system as a whole. For example, the
+CertainBookstore singleton instance can be made to use a distributed system,
+storing data on multiple systems. The protocol between clients and the system
+can remain consistent even though the BookStoreHTTPServer needs to change its
+protocol, and likewise the protocol can change without affecting either the
+client and the server.
+
+As long as good coding practice is used, the same protection should be achieved
+in a local JVM. It cannot be enforced, however, as clients in principle can
+bypass the proxy and interact directly with the methods of the server.
 
 \subsection{Is there a naming service?}
-% XXX: TODO
+The closest thing to a naming service is the translation from tags to method
+calls in \texttt{BookStoreHTTPMesageHandler}. There is no method for service
+discovery, apart from knowing the message tags. This can easily be achieved,
+though, having a service for sending the list of available services.
 
 \subsection{Which RPC semantics do we use?}
-% XXX: TODO
+The architecture uses at-most-once, since the client has no way of knowing
+what happens to the server state in the case of a server error or a connection
+timeout.
 
 \subsection{Is usage of proxy servers safe?}
 You could safely add proxying between the client proxies and the HTTP server
@@ -133,10 +148,17 @@ rewritten to support batched requests, dallying could be employed by the proxy
 servers, allowing them to send larger number of requests with fewer connections.
 
 \subsection{Are there scalability bottlenecks wrt. the number of clients?}
-% XXX: TODO
+The backend, consisting of a synchronized singleton instance, is the biggest
+bottleneck in the current system, as all requests must be handled by it. This
+can be alleviated by rewriting the backend as a distributed system, but this
+would complicate the design by a decent amount.
 
 \subsection{How would clients experience failures if proxies were used?}
-% XXX: TODO
+The clients would not necessarily see a difference if proxies were used. If
+the proxies emply caching they could mask read errors by simply returning
+the cached values, and they could mask certain small errors by transparently
+resending requests. This should, however, be done with care, in order to
+prevent change of semantics and potential overloading of the backend server.
 
 \end{document}
 
