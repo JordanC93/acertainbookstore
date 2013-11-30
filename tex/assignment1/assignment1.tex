@@ -110,6 +110,15 @@ Caching exploits the fact that more frequently accessed items are more likely
 to be in the cache. By this virtue, caching will often improve the common case
 and is therefore an example of fast path optimization.
 
+\section{Testing}
+
+The tests have been expanded with tests checking whether or not the relevant
+functions\footnote{\texttt{buyBooks}, \texttt{rateBooks}, \texttt{addBooks}
+and \texttt{updateEditorPicks}} obey all-or-nothing semantics, by attempting
+to do a transaction where some elements would succeed and others should fail.
+% XXX: Mangler at opdatere buyBooks så den gør dette.
+% XXX: Bør også teste samme ting i updateEditorPicks, men er lidt mere besværligt
+
 \section{Architecture}
 
 \subsection{How does it achieve strong modularity?}

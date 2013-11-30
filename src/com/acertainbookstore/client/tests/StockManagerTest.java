@@ -62,8 +62,13 @@ public class StockManagerTest {
 	 * books available.
 	 * 
 	 * 4. Finally we check whether the book added in step 2 is returned by
-	 * getBooks. 5. We also try to add invalid books and check that they throw
+	 * getBooks.
+     *
+     * 5. We also try to add invalid books and check that they throw
 	 * appropriate exceptions.
+     *
+     * 6. We try to add some valid and invalid books at the same time, to ensure
+     * that all-or-nothing semantics are upheld.
 	 */
 	@Test
 	public void testAddBook() {
@@ -148,6 +153,29 @@ public class StockManagerTest {
 			fail();
 		}
 
+        // Test of all-or-nothing semantics
+        booksToAdd.clear();
+        booksToAdd.add(new ImmutableStockBook(testISBN+3, "Bookbook", "BookAuthor",
+                                              (float) 100, 10, 0, 0, 0, false));
+        booksToAdd.add(new ImmutableStockBook(testISBN+4, null, "BookAuthor",
+                (float) 100, 10, 0, 0, 0, false));
+        booksToAdd.add(new ImmutableStockBook(testISBN+5, "AnotherbookBook", "BookAuthor",
+                (float) 100, 10, 0, 0, 0, false));
+        exceptionThrown = false;
+
+        try {
+            storeManager.addBooks(booksToAdd);
+        } catch (BookStoreException e) {
+            exceptionThrown = true;
+        }
+        assertTrue("Should fail to add in all-or-nothing test", exceptionThrown);
+        try {
+            currentList = storeManager.getBooks();
+            assertTrue(currentList.equals(listBooks));
+        } catch (BookStoreException e) {
+            e.printStackTrace();
+            fail("all-or-nothing semantics not upheld");
+        }
 	}
 
 	/**
@@ -169,6 +197,9 @@ public class StockManagerTest {
 	 * 
 	 * 7. Finally we also test that all the invalid addCopies have not changed
 	 * the initial status.
+     *
+     * 8. We try to add copies to both existing and nonexisting books, to see if
+     * all-or-nothing semantics are upheld
 	 */
 	@Test
 	public void testAddCopies() {
@@ -258,7 +289,24 @@ public class StockManagerTest {
 		} catch (BookStoreException e) {
 			e.printStackTrace();
 		}
-	}
+
+        boolean exceptionThrown = false;
+        bookCopyList.clear();
+        bookCopyList.add(new BookCopy(testISBN, 2));        // book exists
+        bookCopyList.add(new BookCopy(testISBN+100, 2));    // book doesn't exist
+        try {
+            storeManager.addCopies(bookCopyList);
+        } catch (BookStoreException e) {
+            exceptionThrown = true;
+        }
+        assertTrue("all-or-nothing test - throws exception", exceptionThrown);
+        try {
+            currentList = storeManager.getBooks();
+            assertTrue("addCopies doesn't respect all-or-nothing", currentList.equals(listBooks));
+        } catch (BookStoreException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * Here we test updateEditorsPick and getEditorPicks functionalities.
@@ -353,8 +401,7 @@ public class StockManagerTest {
 			exceptionThrown = true;
 		}
 		assertTrue(exceptionThrown);
-
-	}
+    }
 
 	/**
 	 * Here we want to test getBooksInDemand functionality
