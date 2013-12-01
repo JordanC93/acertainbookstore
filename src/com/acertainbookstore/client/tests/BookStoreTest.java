@@ -66,12 +66,16 @@ public class BookStoreTest {
 	@Test
 	public void testBuyBooks() {
 		Integer testISBN = 300;
-		Integer numCpies = 5;
+		Integer numCopies = 5;
 		int buyCopies = 2;
 
 		Set<StockBook> booksToAdd = new HashSet<StockBook>();
 		booksToAdd.add(new ImmutableStockBook(testISBN, "Book Name",
-				"Author Name", (float) 100, numCpies, 0, 0, 0, false));
+				"Author Name", (float) 100, numCopies, 0, 0, 0, false));
+        booksToAdd.add(new ImmutableStockBook(testISBN+1, "Book Name1",
+                "Author Name1", (float) 100, numCopies, 0, 0, 0, false));
+        booksToAdd.add(new ImmutableStockBook(testISBN+2, "Book Name2",
+                "Author Name2", (float) 100, numCopies, 0, 0, 0, false));
 		try {
 			storeManager.addBooks(booksToAdd);
 		} catch (BookStoreException e) {
@@ -92,7 +96,7 @@ public class BookStoreTest {
 		for (StockBook b : listBooks) {
 			if (b.getISBN() == testISBN) {
 				assertTrue("Num copies  after buying one copy",
-						b.getNumCopies() == numCpies - buyCopies);
+						b.getNumCopies() == numCopies - buyCopies);
 				break;
 			}
 		}
@@ -134,7 +138,7 @@ public class BookStoreTest {
 
 		Boolean cannotBuyExceptionThrown = false;
 		booksToBuy = new HashSet<BookCopy>();
-		booksToBuy.add(new BookCopy(testISBN, numCpies));
+		booksToBuy.add(new BookCopy(testISBN, numCopies));
 		try {
 			client.buyBooks(booksToBuy);
 		} catch (BookStoreException e) {
@@ -148,6 +152,31 @@ public class BookStoreTest {
 			e.printStackTrace();
 			fail();
 		}
+
+        // test all-or-nothing semantics
+        booksToBuy.clear();
+        booksToBuy.add(new BookCopy(testISBN, 2));  // valid
+        booksToBuy.add(new BookCopy(testISBN+1, 10));  // invalid
+        booksToBuy.add(new BookCopy(testISBN+2, 3));  // valid
+        Boolean exceptionThrown = false;
+        try {
+            client.buyBooks(booksToBuy);
+            listBooks = storeManager.getBooks();
+        } catch (BookStoreException e) {
+            exceptionThrown = true;
+        }
+        assertTrue("all-or-nothing - rating threw exception", exceptionThrown);
+
+        for (StockBook book : listBooks) {
+            if (book.getISBN() == testISBN) {
+                assertTrue("all-or-nothing - no copies bought", book.getNumCopies() == 3);
+                break;
+            }
+            if (book.getISBN() == testISBN+2) {
+                assertTrue("all-or-nothing - no copies bought", book.getNumCopies() == numCopies);
+                break;
+            }
+        }
 	}
 
 	/**
@@ -322,16 +351,15 @@ public class BookStoreTest {
 
         try {
             client.rateBooks(bookRatingList);
+            listBooks = storeManager.getBooks();
         } catch (BookStoreException e) {
             exceptionThrown = true;
         }
         assertTrue("all-or-nothing - rating threw exception", exceptionThrown);
 
         try {
-            client.rateBooks(bookRatingList);
             listBooks = storeManager.getBooks();
         } catch (BookStoreException e1) {
-            e1.printStackTrace();
             fail();
         }
         for (StockBook book : listBooks) {
