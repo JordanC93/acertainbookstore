@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.acertainbookstore.interfaces.BookStore;
 import com.acertainbookstore.interfaces.StockManager;
@@ -20,6 +23,7 @@ import com.acertainbookstore.utils.BookStoreUtility;
 public class ConcurrentCertainBookStore implements BookStore, StockManager{
 	private static ConcurrentCertainBookStore singleInstance;
 	private static Map<Integer, BookStoreBook> bookMap;
+    private static ReadWriteLock bookMapLock;
 	
 	private ConcurrentCertainBookStore() {
 		// TODO Auto-generated constructor stub
@@ -31,13 +35,13 @@ public class ConcurrentCertainBookStore implements BookStore, StockManager{
 		} else {
 			singleInstance = new ConcurrentCertainBookStore();
 			bookMap = new HashMap<Integer, BookStoreBook>();
+            bookMapLock = new ReentrantReadWriteLock();
 		}
 		return singleInstance;
 	}
 
 	public void addBooks(Set<StockBook> bookSet)
 			throws BookStoreException {
-
 		if (bookSet == null) {
 			throw new BookStoreException(BookStoreConstants.NULL_INPUT);
 		}
@@ -61,10 +65,16 @@ public class ConcurrentCertainBookStore implements BookStore, StockManager{
 			}
 		}
 
-		for (StockBook book : bookSet) {
-			int ISBN = book.getISBN();
-			bookMap.put(ISBN, new BookStoreBook(book));
-		}
+        Lock l = bookMapLock.writeLock();
+        try {
+            l.lock();
+            for (StockBook book : bookSet) {
+                int ISBN = book.getISBN();
+                bookMap.put(ISBN, new BookStoreBook(book));
+            }
+        } finally {
+            l.unlock();
+        }
 		return;
 	}
 
@@ -76,37 +86,50 @@ public class ConcurrentCertainBookStore implements BookStore, StockManager{
 			throw new BookStoreException(BookStoreConstants.NULL_INPUT);
 		}
 
-		for (BookCopy bookCopy : bookCopiesSet) {
-			ISBN = bookCopy.getISBN();
-			numCopies = bookCopy.getNumCopies();
-			if (BookStoreUtility.isInvalidISBN(ISBN))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBN
-						+ BookStoreConstants.INVALID);
-			if (!bookMap.containsKey(ISBN))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBN
-						+ BookStoreConstants.INVALID);
-			if (BookStoreUtility.isInvalidNoCopies(numCopies))
-				throw new BookStoreException(BookStoreConstants.NUM_COPIES
-						+ numCopies + BookStoreConstants.INVALID);
+        Lock l = bookMapLock.writeLock();
+        try {
+            l.lock();
+            for (BookCopy bookCopy : bookCopiesSet) {
+                ISBN = bookCopy.getISBN();
+                numCopies = bookCopy.getNumCopies();
+                if (BookStoreUtility.isInvalidISBN(ISBN))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                            + BookStoreConstants.INVALID);
+                if (!bookMap.containsKey(ISBN))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                            + BookStoreConstants.INVALID);
+                if (BookStoreUtility.isInvalidNoCopies(numCopies))
+                    throw new BookStoreException(BookStoreConstants.NUM_COPIES
+                            + numCopies + BookStoreConstants.INVALID);
 
-		}
+            }
 
-		BookStoreBook book;
-		// Update the number of copies
-		for (BookCopy bookCopy : bookCopiesSet) {
-			ISBN = bookCopy.getISBN();
-			numCopies = bookCopy.getNumCopies();
-			book = bookMap.get(ISBN);
-			book.addCopies(numCopies);
-		}
+            BookStoreBook book;
+            // Update the number of copies
+            for (BookCopy bookCopy : bookCopiesSet) {
+                ISBN = bookCopy.getISBN();
+                numCopies = bookCopy.getNumCopies();
+                book = bookMap.get(ISBN);
+                book.addCopies(numCopies);
+            }
+        } finally {
+            l.unlock();
+        }
 	}
 
 	public List<StockBook> getBooks() {
-		List<StockBook> listBooks = new ArrayList<StockBook>();
-		Collection<BookStoreBook> bookMapValues = bookMap.values();
-		for (BookStoreBook book : bookMapValues) {
-			listBooks.add(book.immutableStockBook());
-		}
+        List<StockBook> listBooks = new ArrayList<StockBook>();
+
+        Lock l = bookMapLock.readLock();
+        try {
+            l.lock();
+            Collection<BookStoreBook> bookMapValues = bookMap.values();
+            for (BookStoreBook book : bookMapValues) {
+                listBooks.add(book.immutableStockBook());
+            }
+        } finally {
+            l.unlock();
+        }
 		return listBooks;
 	}
 
@@ -119,20 +142,26 @@ public class ConcurrentCertainBookStore implements BookStore, StockManager{
 
 		int ISBNVal;
 
-		for (BookEditorPick editorPickArg : editorPicks) {
-			ISBNVal = editorPickArg.getISBN();
-			if (BookStoreUtility.isInvalidISBN(ISBNVal))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBNVal
-						+ BookStoreConstants.INVALID);
-			if (!bookMap.containsKey(ISBNVal))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBNVal
-						+ BookStoreConstants.NOT_AVAILABLE);
-		}
+        Lock l = bookMapLock.writeLock();
+        try {
+            l.lock();
+            for (BookEditorPick editorPickArg : editorPicks) {
+                ISBNVal = editorPickArg.getISBN();
+                if (BookStoreUtility.isInvalidISBN(ISBNVal))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBNVal
+                            + BookStoreConstants.INVALID);
+                if (!bookMap.containsKey(ISBNVal))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBNVal
+                            + BookStoreConstants.NOT_AVAILABLE);
+            }
 
-		for (BookEditorPick editorPickArg : editorPicks) {
-			bookMap.get(editorPickArg.getISBN()).setEditorPick(
-					editorPickArg.isEditorPick());
-		}
+            for (BookEditorPick editorPickArg : editorPicks) {
+                bookMap.get(editorPickArg.getISBN()).setEditorPick(
+                        editorPickArg.isEditorPick());
+            }
+        } finally {
+            l.unlock();
+        }
 		return;
 	}
 
@@ -145,33 +174,39 @@ public class ConcurrentCertainBookStore implements BookStore, StockManager{
 		int ISBN;
 		BookStoreBook book;
 		Boolean saleMiss = false;
-		for (BookCopy bookCopyToBuy : bookCopiesToBuy) {
-			ISBN = bookCopyToBuy.getISBN();
-			if (BookStoreUtility.isInvalidISBN(ISBN))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBN
-						+ BookStoreConstants.INVALID);
-			if (!bookMap.containsKey(ISBN))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBN
-						+ BookStoreConstants.NOT_AVAILABLE);
-			book = bookMap.get(ISBN);
-			if (!book.areCopiesInStore(bookCopyToBuy.getNumCopies())) {
-				book.addSaleMiss(); // If we cannot sell the copies of the book
-									// its a miss 
-				saleMiss = true;
-			}
-		}
+        Lock l = bookMapLock.writeLock();
+        try {
+            l.lock();
+            for (BookCopy bookCopyToBuy : bookCopiesToBuy) {
+                ISBN = bookCopyToBuy.getISBN();
+                if (BookStoreUtility.isInvalidISBN(ISBN))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                            + BookStoreConstants.INVALID);
+                if (!bookMap.containsKey(ISBN))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                            + BookStoreConstants.NOT_AVAILABLE);
+                book = bookMap.get(ISBN);
+                if (!book.areCopiesInStore(bookCopyToBuy.getNumCopies())) {
+                    book.addSaleMiss(); // If we cannot sell the copies of the book
+                                        // its a miss
+                    saleMiss = true;
+                }
+            }
 
-		// We throw exception now since we want to see how many books in the
-		// order incurred misses which is used by books in demand
-		if (saleMiss)
-			throw new BookStoreException(BookStoreConstants.BOOK
-					+ BookStoreConstants.NOT_AVAILABLE);
+            // We throw exception now since we want to see how many books in the
+            // order incurred misses which is used by books in demand
+            if (saleMiss)
+                throw new BookStoreException(BookStoreConstants.BOOK
+                        + BookStoreConstants.NOT_AVAILABLE);
 
-		// Then make purchase
-		for (BookCopy bookCopyToBuy : bookCopiesToBuy) {
-			book = bookMap.get(bookCopyToBuy.getISBN());
-			book.buyCopies(bookCopyToBuy.getNumCopies());
-		}
+            // Then make purchase
+            for (BookCopy bookCopyToBuy : bookCopiesToBuy) {
+                book = bookMap.get(bookCopyToBuy.getISBN());
+                book.buyCopies(bookCopyToBuy.getNumCopies());
+            }
+        } finally {
+            l.unlock();
+        }
 		return;
 	}
 
@@ -180,22 +215,28 @@ public class ConcurrentCertainBookStore implements BookStore, StockManager{
 		if (isbnSet == null) {
 			throw new BookStoreException(BookStoreConstants.NULL_INPUT);
 		}
-		// Check that all ISBNs that we rate are there first.
-		for (Integer ISBN : isbnSet) {
-			if (BookStoreUtility.isInvalidISBN(ISBN))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBN
-						+ BookStoreConstants.INVALID);
-			if (!bookMap.containsKey(ISBN))
-				throw new BookStoreException(BookStoreConstants.ISBN + ISBN
-						+ BookStoreConstants.NOT_AVAILABLE);
-		}
 
-		List<Book> listBooks = new ArrayList<Book>();
+        List<Book> listBooks = new ArrayList<Book>();
+        Lock l = bookMapLock.readLock();
+        try {
+            l.lock();
+            // Check that all ISBNs that we rate are there first.
+            for (Integer ISBN : isbnSet) {
+                if (BookStoreUtility.isInvalidISBN(ISBN))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                            + BookStoreConstants.INVALID);
+                if (!bookMap.containsKey(ISBN))
+                    throw new BookStoreException(BookStoreConstants.ISBN + ISBN
+                            + BookStoreConstants.NOT_AVAILABLE);
+            }
 
-		// Get the books
-		for (Integer ISBN : isbnSet) {
-			listBooks.add(bookMap.get(ISBN).immutableBook());
-		}
+            // Get the books
+            for (Integer ISBN : isbnSet) {
+                listBooks.add(bookMap.get(ISBN).immutableBook());
+            }
+        } finally {
+            l.unlock();
+        }
 		return listBooks;
 	}
 
@@ -207,21 +248,27 @@ public class ConcurrentCertainBookStore implements BookStore, StockManager{
 					+ ", but it must be positive");
 		}
 
-		List<BookStoreBook> listAllEditorPicks = new ArrayList<BookStoreBook>();
-		List<Book> listEditorPicks = new ArrayList<Book>();
-		Iterator<Entry<Integer, BookStoreBook>> it = bookMap.entrySet()
-				.iterator();
-		BookStoreBook book;
+        BookStoreBook book;
+        List<BookStoreBook> listAllEditorPicks = new ArrayList<BookStoreBook>();
+        List<Book> listEditorPicks = new ArrayList<Book>();
+        Lock l = bookMapLock.readLock();
+        try {
+            l.lock();
+            Iterator<Entry<Integer, BookStoreBook>> it = bookMap.entrySet()
+                    .iterator();
 
-		// Get all books that are editor picks
-		while (it.hasNext()) {
-			Entry<Integer, BookStoreBook> pair = (Entry<Integer, BookStoreBook>) it
-					.next();
-			book = (BookStoreBook) pair.getValue();
-			if (book.isEditorPick()) {
-				listAllEditorPicks.add(book);
-			}
-		}
+            // Get all books that are editor picks
+            while (it.hasNext()) {
+                Entry<Integer, BookStoreBook> pair = (Entry<Integer, BookStoreBook>) it
+                        .next();
+                book = (BookStoreBook) pair.getValue();
+                if (book.isEditorPick()) {
+                    listAllEditorPicks.add(book);
+                }
+            }
+        } finally {
+            l.unlock();
+        }
 
 		// Find numBooks random indices of books that will be picked
 		Random rand = new Random();
