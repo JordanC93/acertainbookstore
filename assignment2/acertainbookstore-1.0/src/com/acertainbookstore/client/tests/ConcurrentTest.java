@@ -1,7 +1,7 @@
 package com.acertainbookstore.client.tests;
 
 import com.acertainbookstore.business.BookCopy;
-import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.business.ConcurrentCertainBookStore;
 import com.acertainbookstore.business.ImmutableStockBook;
 import com.acertainbookstore.business.StockBook;
 import com.acertainbookstore.client.BookStoreHTTPProxy;
@@ -30,8 +30,8 @@ public class ConcurrentTest {
     public static void setUpBeforeClass() {
         try {
             if (localTest) {
-                storeManager = CertainBookStore.getInstance();
-                client = CertainBookStore.getInstance();
+                storeManager = ConcurrentCertainBookStore.getInstance();
+                client = ConcurrentCertainBookStore.getInstance();
             } else {
                 storeManager = new StockManagerHTTPProxy(
                         "http://localhost:8081/stock");
@@ -55,7 +55,7 @@ public class ConcurrentTest {
     @Test
     public void testConcurrentBuyAdd() {
         int testISBN = 13245;
-        final int numReps = 1000;
+        final int numReps = 100000;
 
         Set<StockBook> stockBookSet = new HashSet<StockBook>();
         stockBookSet.add(new ImmutableStockBook(testISBN, "Book Name",
@@ -139,7 +139,7 @@ public class ConcurrentTest {
     @Test
     public void testConsistentState() {
         final int testISBN = 1356245;
-        final int numReps = 1000;
+        final int numReps = 100000;
         threadEx = null;
 
         Set<StockBook> stockBookSet = new HashSet<StockBook>();

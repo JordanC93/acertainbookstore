@@ -17,7 +17,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import com.acertainbookstore.business.BookCopy;
 import com.acertainbookstore.business.BookEditorPick;
 import com.acertainbookstore.business.BookRating;
-import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.business.ConcurrentCertainBookStore;
 import com.acertainbookstore.business.StockBook;
 import com.acertainbookstore.utils.BookStoreConstants;
 import com.acertainbookstore.utils.BookStoreException;
@@ -74,7 +74,7 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
 
 				BookStoreResponse bookStoreresponse = new BookStoreResponse();
 				try {
-					CertainBookStore.getInstance().addBooks(bookSet);
+					ConcurrentCertainBookStore.getInstance().addBooks(bookSet);
 				} catch (BookStoreException ex) {
 					bookStoreresponse.setException(ex);
 				}
@@ -90,7 +90,7 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
 						.deserializeXMLStringToObject(xml);
 				bookStoreresponse = new BookStoreResponse();
 				try {
-					CertainBookStore.getInstance().addCopies(listBookCopies);
+					ConcurrentCertainBookStore.getInstance().addCopies(listBookCopies);
 				} catch (BookStoreException ex) {
 					bookStoreresponse.setException(ex);
 				}
@@ -101,8 +101,8 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
 
 			case LISTBOOKS:
 				bookStoreresponse = new BookStoreResponse();
-				bookStoreresponse.setList(CertainBookStore.getInstance()
-						.getBooks());
+				bookStoreresponse.setList(ConcurrentCertainBookStore.getInstance()
+                        .getBooks());
 				listBooksxmlString = BookStoreUtility
 						.serializeObjectToXMLString(bookStoreresponse);
 				response.getWriter().println(listBooksxmlString);
@@ -120,7 +120,7 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
 					Set<BookEditorPick> mapEditorPicksValues = (Set<BookEditorPick>) BookStoreUtility
 							.deserializeXMLStringToObject(xmlStringEditorPicksValues);
 
-					CertainBookStore.getInstance().updateEditorPicks(
+					ConcurrentCertainBookStore.getInstance().updateEditorPicks(
 							mapEditorPicksValues);
 				} catch (BookStoreException ex) {
 					bookStoreresponse.setException(ex);
@@ -138,7 +138,7 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
 				// Make the purchase
 				bookStoreresponse = new BookStoreResponse();
 				try {
-					CertainBookStore.getInstance().buyBooks(bookCopiesToBuy);
+					ConcurrentCertainBookStore.getInstance().buyBooks(bookCopiesToBuy);
 				} catch (BookStoreException ex) {
 					bookStoreresponse.setException(ex);
 				}
@@ -154,8 +154,8 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
 
 				bookStoreresponse = new BookStoreResponse();
 				try {
-					bookStoreresponse.setList(CertainBookStore.getInstance()
-							.getBooks(isbnSet));
+					bookStoreresponse.setList(ConcurrentCertainBookStore.getInstance()
+                            .getBooks(isbnSet));
 				} catch (BookStoreException ex) {
 					bookStoreresponse.setException(ex);
 				}
@@ -173,8 +173,8 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
 				try {
 					numBooks = BookStoreUtility
 							.convertStringToInt(numBooksString);
-					bookStoreresponse.setList(CertainBookStore.getInstance()
-							.getEditorPicks(numBooks));
+					bookStoreresponse.setList(ConcurrentCertainBookStore.getInstance()
+                            .getEditorPicks(numBooks));
 				} catch (BookStoreException ex) {
 					bookStoreresponse.setException(ex);
 				}

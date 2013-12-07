@@ -15,7 +15,7 @@ import org.junit.Test;
 import com.acertainbookstore.business.Book;
 import com.acertainbookstore.business.BookCopy;
 import com.acertainbookstore.business.BookEditorPick;
-import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.business.ConcurrentCertainBookStore;
 import com.acertainbookstore.business.ImmutableStockBook;
 import com.acertainbookstore.business.StockBook;
 import com.acertainbookstore.client.BookStoreHTTPProxy;
@@ -37,8 +37,8 @@ public class StockManagerTest {
 	public static void setUpBeforeClass() {
 		try {
 			if (localTest) {
-				storeManager = CertainBookStore.getInstance();
-				client = CertainBookStore.getInstance();
+				storeManager = ConcurrentCertainBookStore.getInstance();
+				client = ConcurrentCertainBookStore.getInstance();
 			} else {
 				storeManager = new StockManagerHTTPProxy(
 						"http://localhost:8081/stock");
