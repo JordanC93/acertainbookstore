@@ -1,0 +1,51 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage{amsmath,amssymb,amsfonts}
+
+\title{Principles of Computer System Design\\Assignment 3}
+\author{Kristoffer Søholm\\Sebastian Paaske Tørholm}
+
+\begin{document}
+\maketitle
+
+\section{Exercises}
+\subsection{Question 1: Recovery Concepts}
+\subsubsection{subquestion 1}
+It is not necessary to implement neither redo nor undo. Redo is necessary if
+there is not guarantee that the data will be written to persistent storage,
+however with force this guarantee is in place. Similarly, undo is needed if we
+can read uncommitted data, as there is a possibility that the data will not end
+up being committed, so the action involving the data will need to be undone.
+This cannot happen, since we don't allow stealing of locked data.
+
+\subsubsection{subquestion 2}
+Nonvolatile storage is storage that is preserved across system failures or
+restarts, but which has no other guarantees and might be lost to disk failure,
+corruption or similar. In contrast, stable storage gives the hypothetical
+guarantee that the data is never lost. This is most often approximated through
+data replication, for example tape backups, external disks, off-site backups,
+crystals\footnote{\url{http://physicsworld.com/cws/article/news/2013/jul/17/5d-superman-memory-crystal-heralds-unlimited-lifetime-data-storage}} etc. 
+Stable storage is intended to survive through all failures, most commonly disk
+failure, corruption, natural disasters such as fires or floods, and human
+error.
+
+\subsubsection{subquestion 3}
+
+
+\subsection{Question 2: ARIES}
+
+
+\section{Testing}
+
+\section{Implementation}
+
+\section{Discussion of Implementation}
+
+\end{document}
+
