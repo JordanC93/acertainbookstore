@@ -17,6 +17,7 @@ public class WorkloadConfiguration {
 	private int numEditorPicksToGet = 10;
 	private int numAddCopies = 10;
 	private int numBooksToAdd = 5;
+    private int lowStockThreshold = 3;
 	private int warmUpRuns = 100;
 	private int numActualRuns = 500;
 	private float percentRareStockManagerInteraction = 10f;
@@ -28,6 +29,10 @@ public class WorkloadConfiguration {
 	public int getNumBooksToBuy() {
 		return numBooksToBuy;
 	}
+
+    public int getLowStockThreshold() {
+        return lowStockThreshold;
+    }
 
 	public void setNumBooksToBuy(int numBooksToBuy) {
 		this.numBooksToBuy = numBooksToBuy;
@@ -95,10 +100,6 @@ public class WorkloadConfiguration {
 
 	public void setNumActualRuns(int numActualRuns) {
 		this.numActualRuns = numActualRuns;
-	}
-
-	public int getNumBookToBuy() {
-		return numBooksToBuy;
 	}
 
 	public void setNumBookToBuy(int numBookToBuy) {
