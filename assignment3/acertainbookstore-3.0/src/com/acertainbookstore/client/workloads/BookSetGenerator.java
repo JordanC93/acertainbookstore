@@ -1,6 +1,6 @@
 package com.acertainbookstore.client.workloads;
 
-import java.util.Set;
+import java.util.*;
 
 import com.acertainbookstore.business.StockBook;
 
@@ -21,7 +21,13 @@ public class BookSetGenerator {
 	 * @return
 	 */
 	public Set<Integer> sampleFromSetOfISBNs(Set<Integer> isbns, int num) {
-		return null;
+        List<Integer> isbnList = new ArrayList<Integer>(isbns);
+        Collections.shuffle(isbnList);
+        Set<Integer> resultSet = new TreeSet<Integer>();
+        for (int i = 0; i < num; i++) {
+            resultSet.add(isbnList.get(i));
+        }
+        return resultSet;
 	}
 
 	/**

@@ -3,9 +3,13 @@
  */
 package com.acertainbookstore.client.workloads;
 
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Callable;
 
+import com.acertainbookstore.business.Book;
+import com.acertainbookstore.business.BookCopy;
+import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.interfaces.BookStore;
 import com.acertainbookstore.utils.BookStoreException;
 
 /**
@@ -117,7 +121,16 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runFrequentBookStoreInteraction() throws BookStoreException {
-		// TODO: Add code for Customer Interaction
-	}
+        BookStore store = configuration.getBookStore();
+        List<Book> editorPicks = store.getEditorPicks(configuration.getNumEditorPicksToGet());
+        Collections.shuffle(editorPicks);
+
+        Set<BookCopy> booksToBuy = new TreeSet<BookCopy>();
+        for (int i = 0; i < configuration.getNumBooksToBuy(); i++) {
+            Book book = editorPicks.get(i);
+            booksToBuy.add( new BookCopy( book.getISBN(), configuration.getNumBooksToBuy() ) );
+        }
+        store.buyBooks(booksToBuy);
+    }
 
 }
