@@ -1,0 +1,199 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      6373,        190]
+NotebookOptionsPosition[      5795,        166]
+NotebookOutlinePosition[      6139,        181]
+CellTagsIndexPosition[      6096,        178]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.595963455871624*^9, 3.5959634572147007`*^9}, {
+  3.5959635177931657`*^9, 3.595963525522608*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"data", "=", 
+   RowBox[{"Import", "[", 
+    RowBox[{"\"\<sampledata.txt\>\"", ",", "\"\<TSV\>\""}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.595963839285554*^9, 3.5959638549714513`*^9}, {
+   3.5959643706909485`*^9, 3.5959643821316032`*^9}, {3.5959644155025115`*^9, 
+   3.595964437029743*^9}, {3.5959644689655695`*^9, 3.595964470004629*^9}, 
+   3.595964651412005*^9}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"extractData", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", "\"\<------------------------------------\>\"", "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"__", ",", "numThreads_"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"__", ",", "throughput_"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"__", ",", "latency_"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"__", ",", "successfulRatio_"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"__", ",", "customerRatio_"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"__", ",", "successfulCustomerRatio_"}], "}"}], ",", 
+      RowBox[{"{", "\"\<------------------------------------\>\"", "}"}], ",",
+       "rs__"}], "}"}], "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"Prepend", "[", 
+    RowBox[{
+     RowBox[{"extractData", "[", 
+      RowBox[{"{", "rs", "}"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "numThreads", ",", "throughput", ",", "latency", ",", "successfulRatio",
+        ",", "customerRatio", ",", "successfulCustomerRatio"}], "}"}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"extractData", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", "_", "}"}], ",", "rs__"}], "}"}], "]"}], ":=", 
+   RowBox[{"extractData", "[", 
+    RowBox[{"{", "rs", "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"extractData", "[", 
+    RowBox[{"{", "}"}], "]"}], ":=", 
+   RowBox[{"{", "}"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.595963895886791*^9, 3.5959639521980124`*^9}, {
+  3.59596400407998*^9, 3.59596426248376*^9}, {3.5959643035261073`*^9, 
+  3.5959643232562356`*^9}, {3.5959644764329967`*^9, 3.595964533551264*^9}, {
+  3.5959646682709694`*^9, 3.5959646774694953`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"extracted", "=", 
+   RowBox[{"extractData", "[", "data", "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.5959641585198135`*^9, 3.59596416319108*^9}, {
+  3.5959642095307307`*^9, 3.5959642109838142`*^9}, {3.5959646558962617`*^9, 
+  3.595964656760311*^9}, {3.5959646875230703`*^9, 3.5959646984206934`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"throughputGraph", "=", 
+  RowBox[{"ListLinePlot", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], "}"}], "&"}], "/@", "extracted"}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.595964722112049*^9, 3.59596480254865*^9}, {
+  3.595964862606085*^9, 3.5959648717966104`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, {}, 
+    {RGBColor[0.24720000000000014`, 0.24, 0.6], 
+     LineBox[{{1., 4.506526}, {1.5652724768639998`, 12.0593735}}], 
+     LineBox[{{3.0237607470157006`, 12.0593735}, {4., 5.062904}, {5., 
+      2.477458}, {6., 1.789438}, {7., 1.428626}, {8., 1.181324}, {9., 
+      0.803003}, {10., 0.59916}, {11., 0.473127}, {12., 0.398591}, {13., 
+      0.340903}, {14., 0.270222}}]}}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  Method->{},
+  PlotRange->{{0, 14.}, {0, 12.0593735}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{0.28, 0.28}, {0.24118747, 0.24118747}}]], "Output",
+ CellChangeTimes->{{3.595964768852722*^9, 3.5959648029466724`*^9}, 
+   3.595964872194633*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"latencyGraph", "=", 
+  RowBox[{"ListLinePlot", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], ",", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "3", "]"}], "]"}]}], "}"}], "&"}], "/@", "extracted"}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.5959648124792175`*^9, 3.595964817752519*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, {}, 
+    {RGBColor[0.24720000000000014`, 0.24, 0.6], 
+     LineBox[{{1., 0.2219}, {2., 0.112187}, {3., 0.247917}, {4., 0.786593}, {
+      5., 1.999582}, {6., 3.33223}, {7., 4.820676}, {8., 6.742127}, {9., 
+      11.1265}, {10., 16.410904}, {11., 22.799706}, {12., 29.660712}, {13., 
+      37.397428}, {14., 50.33599}}]}}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  Method->{},
+  PlotRange->{{0, 14.}, {0, 50.33599}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{0.28, 0.28}, {1.0067198000000002`, 
+   1.0067198000000002`}}]], "Output",
+ CellChangeTimes->{3.5959648180745373`*^9}]
+}, Open  ]]
+},
+WindowSize->{1358, 641},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 242, 5, 31, "Input"],
+Cell[802, 27, 411, 9, 31, "Input"],
+Cell[1216, 38, 1801, 46, 112, "Input"],
+Cell[3020, 86, 338, 6, 31, "Input"],
+Cell[CellGroupData[{
+Cell[3383, 96, 452, 13, 31, "Input"],
+Cell[3838, 111, 792, 17, 278, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4667, 133, 401, 12, 31, "Input"],
+Cell[5071, 147, 708, 16, 245, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
