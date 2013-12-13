@@ -131,7 +131,33 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runFrequentStockManagerInteraction() throws BookStoreException {
-		// TODO: Add code for Stock Replenishment Interaction
+        StockManager stockmanager = configuration.getStockManager();
+        List<StockBook> books = stockmanager.getBooks();
+        Set<BookCopy> booksToAdd = new TreeSet<BookCopy>();
+        int k = configuration.getLowStockThreshold();
+
+        // Create a min priority queue in order to get the k books with lowest stock
+        PriorityQueue<StockBook> lowestStockBooks = new PriorityQueue<StockBook>(k+1,
+                new Comparator<StockBook>() {
+                    @Override
+                    public int compare(StockBook stockBook, StockBook stockBook2) {
+                        return Integer.compare(stockBook.getNumCopies(), stockBook2.getNumCopies());
+                    }
+                });
+
+        for (StockBook book : books) {
+            if (lowestStockBooks.size() > k) {
+                lowestStockBooks.poll();
+            }
+
+            lowestStockBooks.add(book);
+        }
+
+        for (StockBook book : lowestStockBooks) {
+            booksToAdd.add(new BookCopy(book.getISBN(), configuration.getNumBooksToAdd()));
+        }
+
+        stockmanager.addCopies(booksToAdd);
 	}
 
 	/**
