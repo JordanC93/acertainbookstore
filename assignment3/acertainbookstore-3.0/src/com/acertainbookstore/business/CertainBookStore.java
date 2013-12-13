@@ -46,6 +46,11 @@ public class CertainBookStore implements BookStore, StockManager {
 		return singleInstance;
 	}
 
+    public synchronized static void refreshInstance() {
+        singleInstance = null;
+        getInstance();
+    }
+
 	public synchronized void addBooks(Set<StockBook> bookSet)
 			throws BookStoreException {
 

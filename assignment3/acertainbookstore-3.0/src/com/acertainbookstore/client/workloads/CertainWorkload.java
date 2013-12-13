@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.business.StockBook;
 import com.acertainbookstore.client.BookStoreHTTPProxy;
 import com.acertainbookstore.client.StockManagerHTTPProxy;
 import com.acertainbookstore.interfaces.BookStore;
@@ -117,6 +118,10 @@ public class CertainWorkload {
 			boolean localTest) throws Exception {
 		BookStore bookStore = null;
 		StockManager stockManager = null;
+
+        // Clear book store instance before each test (a bit hacky, but eh.)
+        CertainBookStore.refreshInstance();
+
 		// Initialize the RPC interfaces if its not a localTest
 		if (localTest) {
 			stockManager = CertainBookStore.getInstance();
