@@ -66,6 +66,7 @@ transaction depending on it cannot obtain a lock on the data before we know
 that the changes are stored persistently, and thus will not be lost.
 
 \subsection{Question 2: ARIES}
+We start by running the analysis phase, obtaining \autoref{xact-table} and \autoref{dirty}.
 
 \begin{figure}[h!]
     \centering
@@ -78,6 +79,7 @@ that the changes are stored persistently, and thus will not be lost.
     \hline
 \end{tabular}
 \caption{Transaction table after analysis phase}
+\label{xact-table}
 \end{figure}
 
 \begin{figure}[h!]
@@ -93,14 +95,46 @@ that the changes are stored persistently, and thus will not be lost.
     \hline
 \end{tabular}
 \caption{Dirty page table after analysis phase}
+\label{dirty}
 \end{figure}
 
-% XXX: Verify
-The winner transactions are $\{T3\}$, and the loser transactions are $\{T1,
-T2\}$.
 
+As we can see from \autoref{xact-table}, the loser transactions are
+$\{T1,T2\}$, and the winner transactions are $\{T3\}$ since it does not appear.
 
+The redo phase starts on $LSN = 3$, since that is the lowest $LSN$ in the dirty
+page table. During the redo-phase, the set of log records that may cause pages
+to be rewritten is $\{3,4,5,6,8,9\}$. The reason why they might not be
+rewritten is that they are already flushed to the disk, which is the case if
+$pageLSN \geq LSN$ for the given log record.
 
+After the undo phase, the log is as follows:
+
+\begin{verbatim}
+LOG
+
+LSN   LAST_LSN    TRAN_ID    TYPE               PAGE_ID
+---   --------    -------    ----               -------
+1     -           -          begin CKPT         -
+2     -           -          end CKPT           -
+3     NULL        T1         update             P2
+4     3           T1         update             P1
+5     NULL        T2         update             P5
+6     NULL        T3         update             P3
+7     6           T3         commit             -
+8     5           T2         update             P5
+9     8           T2         update             P3
+10    6           T3         end                -
+11    CLR undo T2, LSN=9, nextCLR=8             P3
+12    CLR undo T2, LSN=8, nextCLR=5             P5
+13    CLR undo T2, LSN=5, nextCLR=NULL, T2 end  P5
+14    CLR undo T2, LSN=4, nextCLR=3             P1
+15    CLR undo T2, LSN=3, nextCLR=NULL, T1 end  P2
+\end{verbatim}
+
+The toUndo set is empty after undoing $LSN = 3$, so the undo phase ends. From
+the CLR's in the final log, we can see that the log records $\{3,4,5,8,9\}$
+were undone.
 
 \section{Testing}
 
