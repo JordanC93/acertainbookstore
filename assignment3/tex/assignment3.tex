@@ -16,7 +16,7 @@
 
 \section{Exercises}
 \subsection{Question 1: Recovery Concepts}
-\subsubsection{subquestion 1}
+\subsubsection{Subquestion 1}
 It is not necessary to implement neither redo nor undo. Redo is necessary if
 there is not guarantee that the data will be written to persistent storage,
 however with force this guarantee is in place. Similarly, undo is needed if we
@@ -24,7 +24,7 @@ can read uncommitted data, as there is a possibility that the data will not end
 up being committed, so the action involving the data will need to be undone.
 This cannot happen, since we don't allow stealing of locked data.
 
-\subsubsection{subquestion 2}
+\subsubsection{Subquestion 2}
 Nonvolatile storage is storage that is preserved across system failures or
 restarts, but which has no other guarantees and might be lost to disk failure,
 corruption or similar. In contrast, stable storage gives the hypothetical
@@ -35,10 +35,71 @@ Stable storage is intended to survive through all failures, most commonly disk
 failure, corruption, natural disasters such as fires or floods, and human
 error.
 
-\subsubsection{subquestion 3}
+\subsubsection{Subquestion 3}
+When employing Write-Ahead Logging, we have two situations when log records
+need to be forced to disk.
 
+When updating data, we need to write the log record for the update to disk
+before the data itself reaches the disk. If we don't do this, we risk the
+system going down with the data written, but no log entry for the given
+change. This is a problem if we need to roll back the transaction writing
+the data, since the original data then is gone. By writing the log record,
+we ensure that we have the possibility of doing this undo even if the system
+crashes.
+
+When committing a transaction, all log records for that transaction need to be
+written to disk before the commit can take place. A situation where not upholding
+this is a problem is as follows:
+
+\begin{itemize}
+    \item T1 updates X, log record for this update isn't written to disk.
+    \item T1 commits.
+    \item T2 starts a transaction updating X, writes log entry to disk.
+    \item System crashes.
+\end{itemize}
+
+If we now need to recover, we erroneously omit the changes done to X by T1,
+which T2 was meant to use.
+
+By forcing the log of a transaction before committing, we ensure that any
+transaction depending on it cannot obtain a lock on the data before we know
+that the changes are stored persistently, and thus will not be lost.
 
 \subsection{Question 2: ARIES}
+
+\begin{figure}[h!]
+    \centering
+\begin{tabular}{|c|c|c|}
+    \hline
+    Xid & LastLSN & Status \\
+    \hline
+    T1  & 4       & Running \\
+    T2  & 9       & Running \\
+    \hline
+\end{tabular}
+\caption{Transaction table after analysis phase}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+\begin{tabular}{|c|c|c|}
+    \hline
+    PageId & recLSN \\
+    \hline
+    P1     & 4 \\
+    P2     & 3 \\
+    P3     & 6 \\
+    P5     & 5 \\
+    \hline
+\end{tabular}
+\caption{Dirty page table after analysis phase}
+\end{figure}
+
+% XXX: Verify
+The winner transactions are $\{T3\}$, and the loser transactions are $\{T1,
+T2\}$.
+
+
 
 
 \section{Testing}
