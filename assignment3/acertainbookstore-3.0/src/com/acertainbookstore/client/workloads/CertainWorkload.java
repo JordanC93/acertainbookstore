@@ -64,7 +64,43 @@ public class CertainWorkload {
 	 * @param workerRunResults
 	 */
 	public static void reportMetric(List<WorkerRunResult> workerRunResults) {
-		// TODO: You should aggregate metrics and output them for plotting here
+
+        float latency = 0;
+        float throughput = 0;
+        int totalInteractions = 0;
+        int successfulInteractions = 0;
+        int ratioInteractions;
+        int totalCustomerInteractions = 0;
+        int successCustomerInteractions = 0;
+        int ratioCustomer;
+        int ratioCustomerSuccess;
+
+        for (WorkerRunResult workerRunResult : workerRunResults) {
+            long time = workerRunResult.getElapsedTimeInNanoSecs();
+
+            throughput += workerRunResult.getSuccessfulInteractions() / time;
+            latency += time;
+            totalInteractions += workerRunResult.getTotalRuns();
+            successfulInteractions += workerRunResult.getSuccessfulInteractions();
+            totalCustomerInteractions += workerRunResult.getTotalFrequentBookStoreInteractionRuns();
+            successCustomerInteractions += workerRunResult.getSuccessfulFrequentBookStoreInteractionRuns();
+        }
+
+
+        // Calculate ratios
+        latency /= totalInteractions;
+        ratioInteractions = successfulInteractions / totalInteractions;
+        ratioCustomer = totalCustomerInteractions / totalInteractions;
+        ratioCustomerSuccess = successCustomerInteractions / totalCustomerInteractions;
+
+        System.out.println("Workload stats");
+        System.out.println("------------------------------------");
+        System.out.println(String.format("Aggregated throughput: %f", throughput));
+        System.out.println(String.format("Average latency: %f", latency));
+        System.out.println(String.format("Ratio of successful interactions: %f", ratioInteractions));
+        System.out.println(String.format("Ratio of customer interactions: %f", ratioCustomer));
+        System.out.println(String.format("Ratio of successful customer interactions: %f", ratioCustomerSuccess));
+        System.out.println("------------------------------------");
 	}
 
 	/**
