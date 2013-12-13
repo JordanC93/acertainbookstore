@@ -9,7 +9,9 @@ import java.util.concurrent.Callable;
 import com.acertainbookstore.business.Book;
 import com.acertainbookstore.business.BookCopy;
 import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.business.StockBook;
 import com.acertainbookstore.interfaces.BookStore;
+import com.acertainbookstore.interfaces.StockManager;
 import com.acertainbookstore.utils.BookStoreException;
 
 /**
@@ -103,8 +105,25 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runRareStockManagerInteraction() throws BookStoreException {
-		// TODO: Add code for New Stock Acquisition Interaction
-	}
+        StockManager stockManager = configuration.getStockManager();
+        List<StockBook> books = stockManager.getBooks();
+        Set<Integer> bookISBNs = new TreeSet<Integer>();
+        for (int i = 0; i < books.size(); i++) {
+            bookISBNs.add(books.get(i).getISBN());
+        }
+
+        BookSetGenerator bookSetGenerator = configuration.getBookSetGenerator();
+        Set<StockBook> generatedBooks = bookSetGenerator.nextSetOfStockBooks(configuration.getNumBooksToAdd());
+        Set<StockBook> booksToAdd = new TreeSet<StockBook>();
+
+        for (StockBook book : generatedBooks) {
+            if (!bookISBNs.contains(book.getISBN())) {
+                booksToAdd.add(book);
+            }
+        }
+
+        stockManager.addBooks(booksToAdd);
+    }
 
 	/**
 	 * Runs the stock replenishment interaction
