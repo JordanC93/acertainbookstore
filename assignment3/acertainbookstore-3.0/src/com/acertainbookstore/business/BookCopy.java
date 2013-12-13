@@ -63,4 +63,9 @@ public class BookCopy {
 		}
 		return false;
 	}
+
+    @Override
+    public int hashCode() {
+        return ISBN;
+    }
 }

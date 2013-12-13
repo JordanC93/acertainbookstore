@@ -40,13 +40,13 @@ public class BookSetGenerator {
 	 * @return
 	 */
 	public Set<StockBook> nextSetOfStockBooks(int num) {
-		Set<StockBook> result = new TreeSet<StockBook>();
+		Set<StockBook> result = new HashSet<StockBook>();
         for (int i = 0; i < num; i++) {
             int isbn = Math.abs(random.nextInt());
             String title = generateTitle();
             String author = generateAuthor();
-            float price = Math.abs(random.nextFloat());
-            int numBooks = random.nextInt(20);
+            float price = Math.abs(random.nextFloat()) * 300.0f + 1.0f;
+            int numBooks = 200 + random.nextInt(200);
             boolean isEditorPick = random.nextBoolean();
 
             result.add( new ImmutableStockBook(isbn, title, author, price, numBooks, 0, 0, 0, isEditorPick) );
@@ -57,11 +57,12 @@ public class BookSetGenerator {
 
     private String generateAuthor() {
         String[] firstNames = new String[] {
-            "J. K.", "John", "Terry", "Neil", "Simon", "Linda", "Maurice", "Alice", "Peter", "R. L."
+            "J. K.", "John", "Terry", "Neil", "Simon", "Linda", "Maurice", "Alice", "Peter", "R. L.",
+            "William", "Gabe"
         };
         String[] lastNames = new String[] {
             "Rowling", "Vorhaus", "Pratchett", "Gaiman", "Molineux", "Da Vinci", "DiCaprio", "Johnson", "Stine",
-            "Snowden"
+            "Snowden", "Wallace", "Newell"
         };
 
         return String.format("%s %s", firstNames[random.nextInt(firstNames.length)],
@@ -70,14 +71,17 @@ public class BookSetGenerator {
 
     private String generateTitle() {
         String[] firstPart = new String[] {
-            "Return of the", "Lord of the", "", "Siegfried and", "Dancing with", "So you think you can"
+            "Return of the", "Lord of the", "", "Siegfried and", "Dancing with", "So you think you can",
+            "Principles of", "Identifying", "Concurrent", "Astronomical", "Cooking with", "The Professional"
         };
         String[] secondPart = new String[] {
-            "Jedi", "King", "Mammoth", "Rings", "Pointed Stick", "Orange", "Fight", "Dance", "Whistle",
+            "Jedi", "King", "Mammoth", "Rings", "Pointed Stick", "Orange", "Fight", "Dance", "Whistle", "Lavender",
+            "Roy", "Royal", "Gremlins", "Christmas", "Java", "Objects", "Python", "Pizza"
         };
         String[] thirdPart = new String[] {
             "", "", "", "", "", ": The Golden Years", ": Revenge of the Mammoth", " With A Vengeance",
-            " on Holiday", ": The Official Strategy Guide", " Club"
+            " on Holiday", ": The Official Strategy Guide", " Club", " For Dummies", ": A Comprehensive Guide",
+            " in Space", " - for SCIENCE!"
         };
 
         return String.format("%s %s%s", firstPart[random.nextInt(firstPart.length)],

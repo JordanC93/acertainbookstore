@@ -156,6 +156,7 @@ public class CertainBookStore implements BookStore, StockManager {
 		int ISBN;
 		BookStoreBook book;
 		Boolean saleMiss = false;
+        BookStoreBook missedBook = null;
 		for (BookCopy bookCopyToBuy : bookCopiesToBuy) {
 			ISBN = bookCopyToBuy.getISBN();
 			if (BookStoreUtility.isInvalidISBN(ISBN))
@@ -169,14 +170,15 @@ public class CertainBookStore implements BookStore, StockManager {
 				book.addSaleMiss(); // If we cannot sell the copies of the book
 									// its a miss 
 				saleMiss = true;
+                missedBook = book;
 			}
 		}
 
 		// We throw exception now since we want to see how many books in the
 		// order incurred misses which is used by books in demand
-		if (saleMiss)
-			throw new BookStoreException(BookStoreConstants.BOOK
-					+ BookStoreConstants.NOT_AVAILABLE);
+		if (saleMiss) {
+			throw new BookStoreException(BookStoreConstants.BOOK + missedBook.toString() + BookStoreConstants.NOT_AVAILABLE);
+        }
 
 		// Then make purchase
 		for (BookCopy bookCopyToBuy : bookCopiesToBuy) {

@@ -53,7 +53,7 @@ public class Worker implements Callable<WorkerRunResult> {
 				numSuccessfulFrequentBookStoreInteraction++;
 			}
 		} catch (BookStoreException ex) {
-			ex.printStackTrace();
+			// ex.printStackTrace();
 			return false;
 		}
 		return true;
@@ -107,14 +107,14 @@ public class Worker implements Callable<WorkerRunResult> {
 	private void runRareStockManagerInteraction() throws BookStoreException {
         StockManager stockManager = configuration.getStockManager();
         List<StockBook> books = stockManager.getBooks();
-        Set<Integer> bookISBNs = new TreeSet<Integer>();
+        Set<Integer> bookISBNs = new HashSet<Integer>();
         for (int i = 0; i < books.size(); i++) {
             bookISBNs.add(books.get(i).getISBN());
         }
 
         BookSetGenerator bookSetGenerator = configuration.getBookSetGenerator();
         Set<StockBook> generatedBooks = bookSetGenerator.nextSetOfStockBooks(configuration.getNumBooksToAdd());
-        Set<StockBook> booksToAdd = new TreeSet<StockBook>();
+        Set<StockBook> booksToAdd = new HashSet<StockBook>();
 
         for (StockBook book : generatedBooks) {
             if (!bookISBNs.contains(book.getISBN())) {
@@ -133,7 +133,7 @@ public class Worker implements Callable<WorkerRunResult> {
 	private void runFrequentStockManagerInteraction() throws BookStoreException {
         StockManager stockmanager = configuration.getStockManager();
         List<StockBook> books = stockmanager.getBooks();
-        Set<BookCopy> booksToAdd = new TreeSet<BookCopy>();
+        Set<BookCopy> booksToAdd = new HashSet<BookCopy>();
         int k = configuration.getLowStockThreshold();
 
         // Create a min priority queue in order to get the k books with lowest stock
@@ -170,7 +170,7 @@ public class Worker implements Callable<WorkerRunResult> {
         List<Book> editorPicks = store.getEditorPicks(configuration.getNumEditorPicksToGet());
         Collections.shuffle(editorPicks);
 
-        Set<BookCopy> booksToBuy = new TreeSet<BookCopy>();
+        Set<BookCopy> booksToBuy = new HashSet<BookCopy>();
         for (int i = 0; i < configuration.getNumBooksToBuy(); i++) {
             Book book = editorPicks.get(i);
             booksToBuy.add( new BookCopy( book.getISBN(), configuration.getNumBooksToBuy() ) );

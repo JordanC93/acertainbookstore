@@ -15,9 +15,9 @@ import com.acertainbookstore.interfaces.StockManager;
 public class WorkloadConfiguration {
 	private int numBooksToBuy = 5;
 	private int numEditorPicksToGet = 10;
-	private int numAddCopies = 10;
+	private int numAddCopies = 20;
 	private int numBooksToAdd = 5;
-    private int lowStockThreshold = 3;
+    private int lowStockThreshold = 30;
 	private int warmUpRuns = 100;
 	private int numActualRuns = 500;
 	private float percentRareStockManagerInteraction = 10f;

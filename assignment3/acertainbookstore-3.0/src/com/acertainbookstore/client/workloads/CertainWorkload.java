@@ -65,20 +65,20 @@ public class CertainWorkload {
 	 */
 	public static void reportMetric(List<WorkerRunResult> workerRunResults) {
 
-        float latency = 0;
-        float throughput = 0;
+        double latency = 0;
+        double throughput = 0;
         int totalInteractions = 0;
         int successfulInteractions = 0;
-        int ratioInteractions;
+        double ratioInteractions;
         int totalCustomerInteractions = 0;
         int successCustomerInteractions = 0;
-        int ratioCustomer;
-        int ratioCustomerSuccess;
+        double ratioCustomer;
+        double ratioCustomerSuccess;
 
         for (WorkerRunResult workerRunResult : workerRunResults) {
             long time = workerRunResult.getElapsedTimeInNanoSecs();
 
-            throughput += workerRunResult.getSuccessfulInteractions() / time;
+            throughput += (double) workerRunResult.getSuccessfulInteractions() / time;
             latency += time;
             totalInteractions += workerRunResult.getTotalRuns();
             successfulInteractions += workerRunResult.getSuccessfulInteractions();
@@ -89,14 +89,15 @@ public class CertainWorkload {
 
         // Calculate ratios
         latency /= totalInteractions;
-        ratioInteractions = successfulInteractions / totalInteractions;
-        ratioCustomer = totalCustomerInteractions / totalInteractions;
-        ratioCustomerSuccess = successCustomerInteractions / totalCustomerInteractions;
+        ratioInteractions = (double) successfulInteractions / totalInteractions;
+        ratioCustomer = (double) totalCustomerInteractions / totalInteractions;
+        ratioCustomerSuccess = (double) successCustomerInteractions / totalCustomerInteractions;
 
+        double nanoToMilli = 1000000.0;
         System.out.println("Workload stats");
         System.out.println("------------------------------------");
-        System.out.println(String.format("Aggregated throughput: %f", throughput));
-        System.out.println(String.format("Average latency: %f", latency));
+        System.out.println(String.format("Aggregated throughput: %f", throughput * nanoToMilli));
+        System.out.println(String.format("Average latency: %f", latency / nanoToMilli));
         System.out.println(String.format("Ratio of successful interactions: %f", ratioInteractions));
         System.out.println(String.format("Ratio of customer interactions: %f", ratioCustomer));
         System.out.println(String.format("Ratio of successful customer interactions: %f", ratioCustomerSuccess));
@@ -125,7 +126,8 @@ public class CertainWorkload {
 			bookStore = new BookStoreHTTPProxy(serverAddress);
 		}
 
-		// TODO: You should initialize data for your bookstore here
+        BookSetGenerator bookSetGenerator = new BookSetGenerator();
+        stockManager.addBooks(bookSetGenerator.nextSetOfStockBooks(100));
 
 		// Finished initialization, stop the clients if not localTest
 		if (!localTest) {

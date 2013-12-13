@@ -53,6 +53,11 @@ public class ImmutableBook implements Book {
 				.getPrice());
 	}
 
+    @Override
+    public int hashCode() {
+        return ISBN;
+    }
+
 	public String toString() {
 		String bookString = "ISBN = " + this.getISBN() + " Title = "
 				+ this.getTitle() + " Author = " + this.getAuthor()
