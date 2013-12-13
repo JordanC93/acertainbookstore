@@ -130,6 +130,17 @@ public class StockManagerHTTPProxy implements StockManager {
 
 	}
 
+    public void resetInstance() throws BookStoreException {
+        ContentExchange exchange = new ContentExchange();
+        String urlString = serverAddress + "/" + BookStoreMessageTag.RESETINSTANCE;
+
+        exchange.setURL(urlString);
+
+        BookStoreUtility.SendAndRecv(this.client, exchange);
+
+        return;
+    }
+
 	public void stop() {
 		try {
 			client.stop();

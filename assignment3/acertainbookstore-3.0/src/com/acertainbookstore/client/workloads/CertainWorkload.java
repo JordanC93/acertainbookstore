@@ -119,16 +119,19 @@ public class CertainWorkload {
 		BookStore bookStore = null;
 		StockManager stockManager = null;
 
-        // Clear book store instance before each test (a bit hacky, but eh.)
-        CertainBookStore.refreshInstance();
-
 		// Initialize the RPC interfaces if its not a localTest
 		if (localTest) {
+            // Clear book store instance before each test (a bit hacky, but eh.)
+            CertainBookStore.refreshInstance();
+
 			stockManager = CertainBookStore.getInstance();
 			bookStore = CertainBookStore.getInstance();
 		} else {
-			stockManager = new StockManagerHTTPProxy(serverAddress + "/stock");
+            stockManager = new StockManagerHTTPProxy(serverAddress + "/stock");
 			bookStore = new BookStoreHTTPProxy(serverAddress);
+
+            // Even hackier way of clearing the instance. #yolo
+            ((StockManagerHTTPProxy)stockManager).resetInstance();
 		}
 
         BookSetGenerator bookSetGenerator = new BookSetGenerator();
