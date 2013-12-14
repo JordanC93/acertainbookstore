@@ -1,0 +1,111 @@
+Workload stats
+------------------------------------
+Number of threads:	1
+Aggregated throughput:	0.039910
+Average latency:	25.056385
+Ratio of successful interactions:	1.000000
+Ratio of customer interactions:	0.594000
+Ratio of successful customer interactions:	1.000000
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	2
+Aggregated throughput:	0.084973
+Average latency:	23.536829
+Ratio of successful interactions:	1.000000
+Ratio of customer interactions:	0.599000
+Ratio of successful customer interactions:	1.000000
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	3
+Aggregated throughput:	0.114872
+Average latency:	26.119324
+Ratio of successful interactions:	1.000000
+Ratio of customer interactions:	0.623333
+Ratio of successful customer interactions:	1.000000
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	4
+Aggregated throughput:	0.108918
+Average latency:	36.738120
+Ratio of successful interactions:	1.000000
+Ratio of customer interactions:	0.597500
+Ratio of successful customer interactions:	1.000000
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	5
+Aggregated throughput:	0.105599
+Average latency:	47.106381
+Ratio of successful interactions:	0.994400
+Ratio of customer interactions:	0.599200
+Ratio of successful customer interactions:	0.990654
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	6
+Aggregated throughput:	0.085791
+Average latency:	69.880906
+Ratio of successful interactions:	0.998333
+Ratio of customer interactions:	0.612000
+Ratio of successful customer interactions:	0.997277
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	7
+Aggregated throughput:	0.074973
+Average latency:	92.370006
+Ratio of successful interactions:	0.988571
+Ratio of customer interactions:	0.598286
+Ratio of successful customer interactions:	0.980898
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	8
+Aggregated throughput:	0.060852
+Average latency:	129.331914
+Ratio of successful interactions:	0.983250
+Ratio of customer interactions:	0.602000
+Ratio of successful customer interactions:	0.972176
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	9
+Aggregated throughput:	0.069054
+Average latency:	129.457598
+Ratio of successful interactions:	0.992889
+Ratio of customer interactions:	0.607778
+Ratio of successful customer interactions:	0.988300
+------------------------------------
+
+2013-12-14 22:25:15.278:WARN:oejut.QueuedThreadPool:1 threads could not be stopped
+Workload stats
+------------------------------------
+Number of threads:	10
+Aggregated throughput:	0.082607
+Average latency:	119.292165
+Ratio of successful interactions:	0.981800
+Ratio of customer interactions:	0.612400
+Ratio of successful customer interactions:	0.970281
+------------------------------------
+
+Workload stats
+------------------------------------
+Number of threads:	11
+Aggregated throughput:	0.067117
+Average latency:	162.845787
+Ratio of successful interactions:	0.991636
+Ratio of customer interactions:	0.604364
+Ratio of successful customer interactions:	0.986161
+------------------------------------
+
