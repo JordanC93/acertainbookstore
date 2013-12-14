@@ -28,10 +28,13 @@ public class CertainWorkload {
 	/**
 	 * @param args
 	 */
+    private static int threads = 0;
 	public static void main(String[] args) throws Exception {
-		int numConcurrentWorkloadThreads = 10;
+
+        for (threads = 1; threads < 31; threads += 1) {
+        int numConcurrentWorkloadThreads = threads;
 		String serverAddress = "http://localhost:8081";
-		boolean localTest = true;
+		boolean localTest = false;
 		List<WorkerRunResult> workerRunResults = new ArrayList<WorkerRunResult>();
 		List<Future<WorkerRunResult>> runResults = new ArrayList<Future<WorkerRunResult>>();
 
@@ -57,6 +60,7 @@ public class CertainWorkload {
 
 		exec.shutdownNow(); // shutdown the executor
 		reportMetric(workerRunResults);
+        }
 	}
 
 	/**
@@ -97,12 +101,14 @@ public class CertainWorkload {
         double nanoToMilli = 1000000.0;
         System.out.println("Workload stats");
         System.out.println("------------------------------------");
-        System.out.println(String.format("Aggregated throughput: %f", throughput * nanoToMilli));
-        System.out.println(String.format("Average latency: %f", latency / nanoToMilli));
-        System.out.println(String.format("Ratio of successful interactions: %f", ratioInteractions));
-        System.out.println(String.format("Ratio of customer interactions: %f", ratioCustomer));
-        System.out.println(String.format("Ratio of successful customer interactions: %f", ratioCustomerSuccess));
+        System.out.println(String.format("Number of threads:\t%d", threads));
+        System.out.println(String.format("Aggregated throughput:\t%f", throughput * nanoToMilli));
+        System.out.println(String.format("Average latency:\t%f", latency / nanoToMilli));
+        System.out.println(String.format("Ratio of successful interactions:\t%f", ratioInteractions));
+        System.out.println(String.format("Ratio of customer interactions:\t%f", ratioCustomer));
+        System.out.println(String.format("Ratio of successful customer interactions:\t%f", ratioCustomerSuccess));
         System.out.println("------------------------------------");
+        System.out.println("");
 	}
 
 	/**

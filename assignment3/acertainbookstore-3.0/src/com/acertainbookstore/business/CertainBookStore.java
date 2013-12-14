@@ -182,6 +182,7 @@ public class CertainBookStore implements BookStore, StockManager {
 		// We throw exception now since we want to see how many books in the
 		// order incurred misses which is used by books in demand
 		if (saleMiss) {
+            //System.out.println(String.format("Failed to buy: %s", missedBook.toString()));
 			throw new BookStoreException(BookStoreConstants.BOOK + missedBook.toString() + BookStoreConstants.NOT_AVAILABLE);
         }
 
