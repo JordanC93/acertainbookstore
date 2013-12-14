@@ -184,7 +184,7 @@ public class BookStoreHTTPMessageHandler extends AbstractHandler {
             case RESETINSTANCE:
                 CertainBookStore.refreshInstance();
                 response.getWriter().println(BookStoreUtility
-                        .serializeObjectToXMLString("#yolo"));
+                        .serializeObjectToXMLString(new BookStoreResponse()));
                 break;
 
 			default:
