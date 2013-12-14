@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[      7119,        203]
-NotebookOptionsPosition[      6538,        179]
-NotebookOutlinePosition[      6883,        194]
-CellTagsIndexPosition[      6840,        191]
+NotebookDataLength[      6884,        195]
+NotebookOptionsPosition[      6304,        171]
+NotebookOutlinePosition[      6649,        186]
+CellTagsIndexPosition[      6606,        183]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -29,13 +29,14 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"data", "=", 
    RowBox[{"Import", "[", 
-    RowBox[{"\"\<sampledata.txt\>\"", ",", "\"\<Table\>\""}], "]"}]}], 
+    RowBox[{"\"\<data-local-sebbe.txt\>\"", ",", "\"\<Table\>\""}], "]"}]}], 
   ";"}]], "Input",
  CellChangeTimes->{{3.595963839285554*^9, 3.5959638549714513`*^9}, {
    3.5959643706909485`*^9, 3.5959643821316032`*^9}, {3.5959644155025115`*^9, 
    3.595964437029743*^9}, {3.5959644689655695`*^9, 3.595964470004629*^9}, 
    3.595964651412005*^9, {3.595965543973057*^9, 3.5959655445830917`*^9}, {
-   3.5959656184463162`*^9, 3.5959656241726437`*^9}}],
+   3.5959656184463162`*^9, 3.5959656241726437`*^9}, {3.596045464394431*^9, 
+   3.596045467262595*^9}, {3.5960529758600626`*^9, 3.5960529774101515`*^9}}],
 
 Cell[BoxData[{
  RowBox[{
@@ -113,27 +114,23 @@ Cell[BoxData[
 
 Cell[BoxData[
  GraphicsBox[{{}, {{}, {}, 
-    {RGBColor[0.24720000000000014`, 0.24, 0.6], LineBox[CompressedData["
-1:eJxTTMoPSmViYGCQBWIQDQEf7I3kBV74eAk4QAUcKqdu9f14xxjK53B4eTHE
-/9lnSyhfwGGVDtdujUe6UL6IQ9SeCAmlx2ZQvoSDsqfAugYumH4Zh5Ori3lO
-nDKE8hUcDuvKe3q+14fylRxuhcstWf5AC8pXcfjr/++dbK8qlK/m0PTPqV/C
-VB3K13CIv/IunHEeTF7LoXf71LjZW1WgfB2H6au2HDU9pwTl6zlUt99emBgI
-4xs4BBxRapPdpwjlGzqEJ5x4FcauAOUbOejskP9wIAHGN3bI32NtFPZbFso3
-cZDsD+L0vyEN5Zs6yF9v6yr0k4HyzRyunp/dFRIhAeWbO+QF/F4794QklG/h
-oPRAYNWVM6JQvqVDMmd28hsWGN/KYbrUwvkrj4tA+daQ8I8XhvJtHHz1jh2w
-qoPxbR3WSqzja+gQdAAAvfNxYA==
-      "]]}}, {}},
+    {RGBColor[0.24720000000000014`, 0.24, 0.6], 
+     LineBox[{{1., 3.726667}, {2., 15.141498}, {3., 9.900263}, {4., 
+      26.351099}, {5., 22.316193}, {6., 50.503712}, {7., 44.433865}, {8., 
+      14.438287}, {9., 13.216719}, {10., 11.563865}, {11., 11.017472}, {12., 
+      10.854003}, {13., 11.242108}, {14., 9.107296}}]}}, {}},
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
   Axes->True,
   AxesLabel->{None, None},
   AxesOrigin->{0, 0},
   Method->{},
-  PlotRange->{{0, 29.}, {0, 25.952733}},
+  PlotRange->{{0, 14.}, {0, 50.503712}},
   PlotRangeClipping->True,
-  PlotRangePadding->{{0.58, 0.58}, {0.51905466, 0.51905466}}]], "Output",
+  PlotRangePadding->{{0.28, 0.28}, {1.01007424, 1.01007424}}]], "Output",
  CellChangeTimes->{{3.595964768852722*^9, 3.5959648029466724`*^9}, 
    3.595964872194633*^9, {3.5959654688787613`*^9, 3.595965474730096*^9}, 
-   3.59596555015241*^9, 3.5959656465179214`*^9}]
+   3.59596555015241*^9, 3.5959656465179214`*^9, 3.596045468983694*^9, 
+   3.596052989414838*^9, 3.596053037478587*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -154,31 +151,26 @@ Cell[BoxData[
 
 Cell[BoxData[
  GraphicsBox[{{}, {{}, {}, 
-    {RGBColor[0.24720000000000014`, 0.24, 0.6], LineBox[CompressedData["
-1:eJxTTMoPSmViYGCQBWIQDQEf7OM+XlHmzTtvDxVwqN8Tvtbnx04on8OhraSC
-4/HyvVC+gMPMJtNzy5QvQvkiDkECNvv2Zp+B8iUcvk2/O7m99QqUL+Mwm+Hw
-p+e3b0L5Cg6BbatmeNk/gPKVHFKi2eYsffIUyldxqPj0cqNu81soX82hr18s
-neczjK/hcHBV1c+5yz5C+VoOVtaSMqr5X6B8HYdl8Ur3rP5/h/L1HNYUmsky
-yvyC8g0c9vnWf1M++gfKN3QoPZ40O0SE0QHCN3Jgjz20cPsMGN/Y4U12bFaL
-HAuUb+LAt89gppYFO5Rv6tDAH7d7CyMHlG/m8J1ps9PEczxQvrnDgkOCS4Jy
-YHwLh7zch5UrKwShfEsHsWXvTVm2C0H5Vg6BmUfO2MmLQPnWDrLH+ae6+YhB
-+TYOB499ff+rRhzKt3V4945xl765lAMAxHR6Hg==
-      "]]}}, {}},
+    {RGBColor[0.24720000000000014`, 0.24, 0.6], 
+     LineBox[{{1., 0.268336}, {2., 0.132666}, {3., 0.312806}, {4., 0.16062}, {
+      5., 0.308843}, {6., 0.159287}, {7., 0.37629}, {8., 0.599657}, {9., 
+      0.700174}, {10., 0.934601}, {11., 0.996211}, {12., 1.104679}, {13., 
+      1.154949}, {14., 1.533463}}]}}, {}},
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
   Axes->True,
   AxesLabel->{None, None},
   AxesOrigin->{0, 0},
   Method->{},
-  PlotRange->{{0, 29.}, {0, 6.553893}},
+  PlotRange->{{0, 14.}, {0, 1.533463}},
   PlotRangeClipping->True,
-  PlotRangePadding->{{0.58, 0.58}, {0.13107786000000002`, 
-   0.13107786000000002`}}]], "Output",
+  PlotRangePadding->{{0.28, 0.28}, {0.03066926, 0.03066926}}]], "Output",
  CellChangeTimes->{3.5959648180745373`*^9, 3.595965468940765*^9, 
-  3.5959656479830055`*^9}]
+  3.5959656479830055`*^9, 3.5960454690346966`*^9, 3.596052989534845*^9, 
+  3.596053037515589*^9}]
 }, Open  ]]
 },
 WindowSize->{1150, 614},
-WindowMargins->{{15, Automatic}, {Automatic, 6}},
+WindowMargins->{{15, Automatic}, {Automatic, 0}},
 FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
 StyleDefinitions->"Default.nb"
 ]
@@ -194,16 +186,16 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[557, 20, 242, 5, 31, "Input"],
-Cell[802, 27, 515, 10, 31, "Input"],
-Cell[1320, 39, 1881, 47, 132, "Input"],
-Cell[3204, 88, 338, 6, 31, "Input"],
+Cell[802, 27, 621, 11, 31, "Input"],
+Cell[1426, 40, 1881, 47, 132, "Input"],
+Cell[3310, 89, 338, 6, 31, "Input"],
 Cell[CellGroupData[{
-Cell[3567, 98, 452, 13, 31, "Input"],
-Cell[4022, 113, 1061, 22, 277, "Output"]
+Cell[3673, 99, 452, 13, 31, "Input"],
+Cell[4128, 114, 915, 18, 245, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[5120, 140, 401, 12, 31, "Input"],
-Cell[5524, 154, 998, 22, 248, "Output"]
+Cell[5080, 137, 401, 12, 31, "Input"],
+Cell[5484, 151, 804, 17, 275, "Output"]
 }, Open  ]]
 }
 ]

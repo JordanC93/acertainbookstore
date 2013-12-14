@@ -31,10 +31,10 @@ public class CertainWorkload {
     private static int threads = 0;
 	public static void main(String[] args) throws Exception {
 
-        for (threads = 1; threads < 31; threads += 1) {
+        for (threads = 1; threads <= 15; threads += 1) {
         int numConcurrentWorkloadThreads = threads;
 		String serverAddress = "http://localhost:8081";
-		boolean localTest = false;
+		boolean localTest = true;
 		List<WorkerRunResult> workerRunResults = new ArrayList<WorkerRunResult>();
 		List<Future<WorkerRunResult>> runResults = new ArrayList<Future<WorkerRunResult>>();
 
