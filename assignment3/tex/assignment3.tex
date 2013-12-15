@@ -5,6 +5,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \usepackage{amsmath,amssymb,amsfonts}
 
@@ -171,6 +173,64 @@ OS: Ubuntu 13.10, kernel 3.11.0-14-generic (x86-64)
 Java: java version 1.7.0_25, OpenJDK Runtime Environment (IcedTea 2.3.12)
 \end{verbatim}
 \subsection{}
+
+\subsection*{Results}
+
+The experiments were run with up to 14 parallel consumers, at which point the
+system was noticably constained by the load.
+
+The resulting data has been plotted and can be seen in \autoref{throughput}
+and \autoref{latency}. We have chosen to plot the local and proxied benchmarks
+independently, since the scales are so widely different on the two datasets
+that plotting them together makes the data inlegible.
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{../analysis/throughput-local-kris.pdf}
+        \caption{Local test}
+    \end{subfigure}
+    \,
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{../analysis/throughput-remote-kris.pdf}
+        \caption{Proxied test}
+    \end{subfigure}
+    \caption{Throughput in operations/ms plotted against number of parallel consumers}
+    \label{throughput}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{../analysis/latency-local-kris.pdf}
+        \caption{Local test}
+    \end{subfigure}
+    \,
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{../analysis/latency-remote-kris.pdf}
+        \caption{Proxied test}
+    \end{subfigure}
+    \caption{Average latency in ms plotted against number of parallel consumers}
+    \label{latency}
+\end{figure}
+
+For throughput we expect to see a high throughput for a low number of parallel
+consumers, with the throughput decreasing as the number of consumers increase.
+The low concurrency means that it shouldn't take more than a few threads to
+max out the capacity of the service. Since the amount of work to be done in
+total grows with the number of threads, this should lead to a decrease in
+throughput once the capacity is reached.
+
+In \autoref{throughput} we see that the maximum capacity is reached around
+$2-3$ simulataneous threads, decreasing thereafter. There does appear to be a
+spike around $10$ simultaneous threads which we cannot explain.
+
+For latency we expect the latency to be low for a low number of
+consumers, increasing with the number of consumers due to having to wait for
+the resource to be free.
+
+The graphs in \autoref{latency} confirm this theory, showing a significant
+increase in latency as the number of threads go up.
 
 \section{Discussion of Implementation}
 
