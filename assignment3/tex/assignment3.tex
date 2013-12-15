@@ -27,6 +27,9 @@ can read uncommitted data, as there is a possibility that the data will not end
 up being committed, so the action involving the data will need to be undone.
 This cannot happen, since we don't allow stealing of locked data.
 
+This conclusion is also supported by the slides, as shown in \autoref{slide} in
+Appendix C.
+
 \subsubsection{Subquestion 2}
 Nonvolatile storage is storage that is preserved across system failures or
 restarts, but which has no other guarantees and might be lost to disk failure,
@@ -259,6 +262,13 @@ the amount of books.
 \section*{Appendix B: RPC data}
 \label{b}
 \verbatiminput{../analysis/data-remote-kris.txt}
-
+\newpage
+\section{Appendix C: lecture slide}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.7]{images/force-nosteal.png}
+\caption{Slgithly edited slide from a lecture}
+\label{slide}
+\end{figure}
 \end{document}
 
