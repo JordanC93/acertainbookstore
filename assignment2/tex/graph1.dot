@@ -1,0 +1,12 @@
+digraph NFA1 {
+    rankdir="LR"
+
+    T1 [label="T1"]
+    T2 [label="T2"]
+    T3 [label="T3"]
+
+    T1->T2 [label="X"]
+    T2->T3 [label="Z"]
+    T3->T1 [label="Y"]
+
+}
