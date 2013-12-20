@@ -11,15 +11,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.acertainbookstore.business.ReplicationRequest;
+import com.acertainbookstore.utils.*;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import com.acertainbookstore.business.SlaveCertainBookStore;
-import com.acertainbookstore.utils.BookStoreConstants;
-import com.acertainbookstore.utils.BookStoreException;
-import com.acertainbookstore.utils.BookStoreMessageTag;
-import com.acertainbookstore.utils.BookStoreResponse;
-import com.acertainbookstore.utils.BookStoreUtility;
 
 /**
  * 
@@ -112,6 +109,23 @@ public class SlaveBookStoreHTTPMessageHandler extends AbstractHandler {
 						BookStoreUtility
 								.serializeObjectToXMLString(bookStoreresponse));
 				break;
+
+            case REPLICATE:
+                String xmlReplicationRequest = BookStoreUtility.extractPOSTDataFromRequest(request);
+                ReplicationRequest replicationRequest =
+                        (ReplicationRequest) BookStoreUtility.deserializeXMLStringToObject(xmlReplicationRequest);
+
+                bookStoreresponse = new BookStoreResponse();
+                try {
+                    BookStoreResult res = SlaveCertainBookStore.getInstance().applyReplicationRequest(replicationRequest);
+                    bookStoreresponse.setResult(res);
+                } catch (BookStoreException ex) {
+                    bookStoreresponse.setException(ex);
+                }
+
+                response.getWriter().println(
+                        BookStoreUtility
+                                .serializeObjectToXMLString(bookStoreresponse));
 
 			default:
 				System.out.println("Unhandled message tag");

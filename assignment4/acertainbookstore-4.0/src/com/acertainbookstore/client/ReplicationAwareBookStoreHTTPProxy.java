@@ -7,10 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.SynchronousQueue;
 
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
@@ -41,6 +39,9 @@ public class ReplicationAwareBookStoreHTTPProxy implements BookStore {
 	private String masterAddress;
 	private String filePath = "/universe/pcsd/acertainbookstore/src/proxy.properties";
 	private volatile long snapshotId = 0;
+    // For load balancing:
+    private volatile Queue<String> pendingSlaves;
+    private volatile int slaveHits, masterHits;
 
 	public long getSnapshotId() {
 		return snapshotId;
@@ -99,13 +100,29 @@ public class ReplicationAwareBookStoreHTTPProxy implements BookStore {
 			}
 			this.slaveAddresses.add(slave);
 		}
+
+        slaveHits = masterHits = 0;
+        pendingSlaves = new SynchronousQueue<String>();
 	}
 
-	public String getReplicaAddress() {
-		return ""; // TODO
+	public synchronized String getReplicaAddress() {
+        if (pendingSlaves.isEmpty()) {
+            if (slaveHits > masterHits) {
+                masterHits ++;
+                return this.masterAddress;
+            } else {
+                slaveHits ++;
+                List<String> slavesToAdd = new ArrayList<String>(this.slaveAddresses);
+                Collections.shuffle(slavesToAdd);
+                pendingSlaves.addAll(slavesToAdd);
+            }
+        }
+
+        return pendingSlaves.poll();
 	}
 
 	public String getMasterServerAddress() {
+        masterHits ++;
 		return this.masterAddress;
 	}
 

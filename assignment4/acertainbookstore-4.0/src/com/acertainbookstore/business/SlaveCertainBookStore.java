@@ -64,4 +64,27 @@ public class SlaveCertainBookStore implements ReplicatedReadOnlyBookStore,
 		return result;
 	}
 
+    public synchronized BookStoreResult applyReplicationRequest(ReplicationRequest request)
+            throws BookStoreException {
+        switch (request.getMessageType()) {
+            case ADDBOOKS:
+                bookStore.addBooks((Set<StockBook>) request.getDataSet());
+                break;
+            case ADDCOPIES:
+                bookStore.addCopies((Set<BookCopy>) request.getDataSet());
+                break;
+            case UPDATEEDITORPICKS:
+                bookStore.updateEditorPicks((Set<BookEditorPick>) request.getDataSet());
+                break;
+            case BUYBOOKS:
+                bookStore.buyBooks((Set<BookCopy>) request.getDataSet());
+                break;
+            default:
+                throw new BookStoreException("invalid replication type");
+        }
+
+        this.snapshotId += 1;
+        return new BookStoreResult(null, this.snapshotId);
+    }
+
 }
