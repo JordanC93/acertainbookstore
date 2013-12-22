@@ -20,7 +20,22 @@
 \section{Exercises}
 \subsection{Question 1: Communication Abstractions}
 
-% XXX: TODO
+RPC as we know it is a synchronous communication abstraction, and is therefore
+not enough to on its own be used to implement asynchronous persistent
+communication.
+
+A model similar to the one used by SMTP could be used, where if A wants to
+communicate with B, A sends a synchronous message to a queueing server, which
+B then can poll for new messages synchronously at some later point.
+
+While all communication in this model is synchronous, A and B do not need to
+engage in synchronous communication. The queueing server can take care of
+persisting the message to suitable storage, until B picks up the message.
+
+This model can naturally be scaled or made more redundant as needed; for
+instance the queueing system can mirror SMTP, where each of A and B may belong
+to their own separate queueing servers, which exchange messages with each
+other.
 
 \subsection{Question 2: Reliability} 
 
