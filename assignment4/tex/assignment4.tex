@@ -17,33 +17,62 @@
 \begin{document}
 \maketitle
 
-\section{Exercises}
-\subsection{Question 1: Communication Abstractions}
+\section*{Exercises}
+\subsection*{Question 1: Communication Abstractions}
 
 % XXX: TODO
 
-\subsection{Question 2: Reliability} 
+\subsection*{Question 2: Reliability} 
+In all questions we assume that the failure rate $p$ of each link is
+independent of the other links. This is likely not the case in practice, but
+with the level of detail given in the questions we have no reasonable way to
+model this.
+
+\subsubsection*{What is the probability that the daisy chain network is
+                connecting all the buildings?}
+
+The daisy chain is connecting all the buildings exactly when no links have
+failed. Since the probability that a given link hasn't failed is $1-p$, then
+the combined probability that no links have failed is $P_{daisy} = (1-p)^2$.
+
+\subsubsection*{What is the probability that the fully connected network is
+                connecting all the buildings?}
+
+For the fully connected network, two links must fail at the same time in order
+for the network to be unconnected. Since the network is either connected or
+unconnected, the probability that the network is connected, $P_{full}$, is $1 =
+P_{con} + p^2 \Leftrightarrow P_{con} = (1-p^2)$.
+
+\subsubsection*{The town council has a limited budget, with which it can buy
+either a daisy chain network with two high reliability links ($p = .000001$),
+or a fully connected network with three low-reliability links ($p = .0001$).
+Which should they purchase?}
+
+By inserting the values into the formulas derived in the previous questions,
+we get that the probability that the daisy network is connected is $P_{daisy}
+= (1-0.000001)^2 = 0.999998$, while the probability for the fully connected
+network is $P_{full} = 1-0.0001^2 = 0.99999999$. All other things being equal,
+they should purchase the full connection, since it has a higher probability of
+all buildings being connected.
+
+\section*{Programming}
 
 % XXX: TODO
 
-\section{Programming}
+\section*{Discussion}
+
+\subsection*{Subquestion 1}
 
 % XXX: TODO
 
-\section{Discussion}
+\subsection*{Subquestion 2}
 
-\subsection{Subquestion 1}
+% XXX: TODO
+\subsection*{Subquestion 3}
 
 % XXX: TODO
 
-\subsection{Subquestion 2}
-
-% XXX: TODO
-\subsection{Subquestion 3}
-
-% XXX: TODO
-
-\subsection{Subquestion 4}
+\subsection*{Subquestion 4}
 
 % XXX: TODO
 
