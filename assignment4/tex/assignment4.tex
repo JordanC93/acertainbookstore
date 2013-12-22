@@ -70,26 +70,53 @@ network is $P_{full} = 1-0.0001^2 = 0.99999999$. All other things being equal,
 they should purchase the full connection, since it has a higher probability of
 all buildings being connected.
 
-\section*{Programming}
-
-% XXX: TODO
-
 \section*{Discussion}
 
 \subsection*{Subquestion 1}
 
-% XXX: TODO
+The replication was implemented by adding a new tag for usage in the slave RPC
+protocol. The RPC command \texttt{REPLICATE} takes a serialized \texttt{ReplicationRequest},
+and applies it to the local \texttt{SlaveCertainBookStore} instance.
+
+In order to attempt to load-balance evenly between the master and slave instances,
+\texttt{getReplicaAddress} from \texttt{ReplicationAwareBookStoreHTTPProxy} keeps track
+of how many times the master and slaves each have been called from both writes and reads.
+The slaves are prioritized for reads, however, the master is also used, if it has been
+called less times in total than the slaves. This should help ensure, that the master
+doesn't go unused, even in the case of a lot of writes, while also helping to alleviate
+some of the burden on it when it's written to.
+
+% XXX: Latency hiding?
+% XXX: Fail stop?
 
 \subsection*{Subquestion 2}
 
-% XXX: TODO
+The replication mechanism is rather simple, but also has the master server
+as a bottleneck. As the number of slave servers increases, so does the work
+the master server needs to do on a write. This could be alleviated, by having
+the writes be distributed from the master in a tree-like structure or perhaps
+gossiping.
+
+% XXX: Multiple masters?
+
 \subsection*{Subquestion 3}
 
-% XXX: TODO
+In order to ensure, that the proxy the client switched over to is based on
+a snapshot id at least as new as the one from the old proxy, the client can
+issue a write operation of some sort. By issuing a write, the proxy is forced
+to communicate with the master server, and is set to the latest snapshot id.
 
 \subsection*{Subquestion 4}
 
-% XXX: TODO
+If a subset of slaves were cut off from the master, but do not fail-stop, the
+master will forget about them on the first failed attempt to write to them.
+Because of this, it is impossible for the slaves to at some later point start
+getting updates again, giving an invalid state.
+
+These slaves will then continue to serve up the data they had at the time of
+the split. A client would therefore still be able to get at the old data,
+however, the snapshot ids ensure, that the client won't use this data as soon
+as it sees some newer data from one of the remaining slaves.
 
 \end{document}
 
